@@ -1,0 +1,14 @@
+{
+  "name": "image-shrink",
+  "version": "1.0.0",
+  "description": "image shrinking app",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Stas",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^13.1.4"
+  }
+}
