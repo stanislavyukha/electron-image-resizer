@@ -1,14 +1,18 @@
 {
-  "name": "image-shrink",
+  "name": "image-resizer",
   "version": "1.0.0",
   "description": "image shrinking app",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "dev": "nodemon --exec electron ."
   },
   "author": "Stas",
   "license": "ISC",
   "dependencies": {
     "electron": "^13.1.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.8"
   }
 }
