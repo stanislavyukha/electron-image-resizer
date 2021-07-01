@@ -1,21 +1,70 @@
+body {
+  background-color: #282c34;
+  color: #c7d1d1;
+}
 .container {
-	width: 400px;
-	margin-top: 70px;
-	padding: 0 20px;
+  width: 400px;
+  margin-top: 20px;
+  padding: 0 20px;
 }
-
+.icon {
+  font-size: 5rem;
+}
 .about {
-	width: 100%;
+  width: 100%;
 }
-
 .btn {
-	width: 100%;
+  width: 100%;
+  background-color: #2eb6ec;
+  border-radius: 4px;
+}
+.btn:hover {
+  background-color: #0189be;
+}
+.file-path {
+  color: #c7d1d1;
+}
+.range-field input {
+  background-color: #c2c0c2;
+  border: none;
+}
+input[type='range']::-webkit-slider-thumb {
+  background-color: #2eb6ec;
 }
 
+/***** These are to edit the thumb and the text inside the thumb *****/
+input[type='range'] + .thumb {
+  background-color: #dedede;
+}
+input[type='range'] + .thumb.active .value {
+  color: #2eb6ec;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.transparent {
+  display: block;
+}
+.progress {
+  height: 14px;
+  background-color: #c2c0c2;
+  border-radius: 4px;
+}
+.progress .determinate {
+  background-color: #07ce17;
+  /* background-color: #07ce17; */
+}
+.card .card-content {
+  padding: 5px;
+  color: black;
+}
 .output {
-	margin-top: 40px;
+  border-radius: 4px;
+  padding: 5px;
+  margin-top: 25px;
+  background-color: #c7d1d1;
 }
 
 #output-path {
-	font-weight: bold;
+  font-weight: bold;
 }

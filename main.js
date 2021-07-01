@@ -4,13 +4,12 @@ const { app, BrowserWindow, Menu, ipcMain, shell } = require('electron');
 const imagemin = require('imagemin');
 const imageminMozjpeg = require('imagemin-mozjpeg');
 const imageminPngquant = require('imagemin-pngquant');
-const slash = require('slash');
 const iconv = require('iconv-lite');
 
 
 process.env.NODE_ENV = 'development';
 
-const isDev = process.env.NODE_ENV != 'production' ? true : false;
+const isDev = process.env.NODE_ENV !== 'production' ? true : false;
 
 const isMac = process.platform === 'darwin' ? true : false;
 
@@ -54,13 +53,8 @@ function createAboutWindow() {
 
 app.on('ready', () => {
     createMainWindow();
-
     const mainMenu = Menu.buildFromTemplate(menu);
     Menu.setApplicationMenu(mainMenu);
-
-    // globalShortcut.register('CmdOrCtrl+R', () => mainWindow.reload()); replaced with roles
-    // globalShortcut.register(isMac ? 'Command+Alt+I' : 'Ctrl+Shift+I', () => mainWindow.toggleDevTools());
-
     mainWindow.on('ready', () => mainWindow = null)
 });
 
@@ -79,15 +73,7 @@ const menu = [
     ] : []),
     {
         role: 'fileMenu'
-    // label: 'File',
-    // submenu: [
-    //     {
 
-    //     label: 'Quit',
-    //     accelerator: isMac ? 'Command+W' : 'Ctrl+W', // 'CmdOrCtrl+W'
-    //     click: () => app.quit()
-    //     },
-    // ],
     },
     ...(isDev ? [
         {
@@ -121,22 +107,19 @@ ipcMain.on('image:minimize', (e, options) => {
   async function shrinkImage({ imgPath, quality, dest }) {
     try {
       const pngQuality = quality / 100
-  
-      const files = await imagemin([slash(imgPath)], {
-        destination: dest,
-        plugins: [
-          imageminMozjpeg({ quality }),
-          imageminPngquant({
-            quality: [pngQuality, pngQuality],
-          }),
-        ],
-      })
-      console.log(files);
-    //   var message = iconv.encode(iconv.decode(imgPath, "utf16"), "windows-1251").toString();
-    //   console.log(message);
+        for (let i = 0; i < imgPath.length; i++) {
+            const files = await imagemin([imgPath[i].replace(/\\/g, '/')], {
+                destination: dest,
+                plugins: [
+                  imageminMozjpeg({ quality }),
+                  imageminPngquant({
+                    quality: [pngQuality, pngQuality],
+                  }),
+                ],
+              })
+              mainWindow.webContents.send('image:converted', i);
+        }
       shell.openPath(dest)
-  
-      mainWindow.webContents.send('image:done')
     } catch (err) {
       log.error(err)
     }
