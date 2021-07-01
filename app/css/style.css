@@ -1,8 +1,38 @@
 body {
   background-color: #282c34;
   color: #c7d1d1;
+  -webkit-app-region: drag;
+}
+.top-frame {
+  background-color: #171a1f;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 16px;
+  padding: 0;
+  -webkit-app-region: drag;
+}
+.top-frame > * {
+  -webkit-app-region: no-drag;
+}
+.frame-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 30px;
+}
+.frame-btn:hover {
+  background-color: #383b41;
+}
+.btn-info {
+  margin-right: auto;
+}
+.btn-close:hover {
+  background-color: #d41324;
 }
 .container {
+  -webkit-app-region: no-drag;
   width: 400px;
   margin-top: 20px;
   padding: 0 20px;

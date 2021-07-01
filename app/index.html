@@ -14,14 +14,19 @@
     <title>Image Resizer</title>
   </head>
   <body>
+    <div class="top-frame drag">
+      <div class="frame-btn btn-info"> <i class="fas fa-info-circle"></i></div>
+      <div class="frame-btn btn-minimize"><i class="far fa-window-minimize"></i></div>
+      <div class="frame-btn btn-close"><i class="fas fa-times"></i></div>
+    </div>
     <div class="container center-align">
       <form id="image-form">
         <div class="file-field input-field">
-          <h3 class="icon"><i class="fas fa-images"></i></h3>
+          <h3 class="icon"><i id="upload-icon" class="fas fa-images"></i></h3>
           <p>Choose an image to resize</p>
           <div class="btn">
             <span>Drag or browse your images</span>
-            <input type="file" id="img" multiple accept=".jpg,.jpeg,.png" />
+            <input class="file-input" type="file" id="img" multiple accept=".jpg,.jpeg,.png" />
           </div>
           <div class="file-path-wrapper">
             <input type="text" class="file-path" placeholder="Upload file(s)" />
@@ -33,7 +38,7 @@
         <p class="range-field">
           <input type="range" min="0" max="100" id="slider" />
         </p>
-        <input type="submit" value="Resize" class="btn btn-submit" />
+        <input type="submit" value="Resize" class="btn" />
       </form>
       <div class="resize-progress transparent">
         Resized <span id="current-progress">0</span> of
@@ -48,58 +53,7 @@
         </div>
       </div>
     </div>
-    <script src="js/materialize.min.js"></script>
-    <script type="text/javascript" charset="utf-8">
-      const path = require('path');
-      const os = require('os');
-      const { ipcRenderer } = require('electron');
-
-      const form = document.getElementById('image-form');
-      const slider = document.getElementById('slider');
-      const img = document.getElementById('img');
-      const currentProgress = document.getElementById('current-progress');
-      const totalAmount = document.getElementById('total-amount');
-      const progressBar = document.querySelector('.determinate');
-      const fileFiled = document.querySelector('.file-field');
-      const iconFas = document.querySelector('.fas');
-
-      fileFiled.addEventListener('dragenter', function (e) {
-        e.preventDefault();
-        iconFas.style.color = '#07ce17';
-        iconFas.classList.remove('fa-images');
-        iconFas.classList.add('fa-plus-circle');
-      });
-      fileFiled.addEventListener('dragleave', function (e) {
-        e.preventDefault();
-        iconFas.style.color = 'inherit';
-        iconFas.classList.add('fa-images');
-        iconFas.classList.remove('fa-plus-circle');
-      });
-
-      document.getElementById('output-path').innerText = path.join(
-        os.homedir(),
-        'imageresize'
-      );
-
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const paths = [];
-        for (let image of img.files) {
-          paths.push(image.path);
-        }
-        const imgPath = paths;
-        const quality = slider.value;
-        ipcRenderer.send('image:minimize', {
-          imgPath,
-          quality,
-        });
-        totalAmount.textContent = imgPath.length;
-      });
-      ipcRenderer.on('image:converted', function (evt, message) {
-        currentProgress.textContent = message + 1;
-        progressBar.style.width =
-          (currentProgress.textContent / totalAmount.textContent) * 100 + '%';
-      });
-    </script>
+    <script src="js/materialize.min.js" defer></script>
+    <script src="js/index.js"" defer></script>
   </body>
 </html>

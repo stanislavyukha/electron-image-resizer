@@ -7,10 +7,9 @@ const imageminPngquant = require('imagemin-pngquant');
 const iconv = require('iconv-lite');
 
 
-process.env.NODE_ENV = 'development';
+process.env.NODE_ENV = 'production';
 
 const isDev = process.env.NODE_ENV !== 'production' ? true : false;
-
 const isMac = process.platform === 'darwin' ? true : false;
 
 
@@ -21,9 +20,11 @@ function createMainWindow() {
     mainWindow = new BrowserWindow({
         title: 'Image Resizer',
         width: isDev ? 800 : 600,
-        height: 500,
+        height: 550,
         icon: 'assets/icons/icon_256x256.png',
         resizable: isDev ? true : false,
+        frame: false,
+        autoHideMenuBar: true,
         backgroundColor: 'white',
         webPreferences: {
             nodeIntegration: true,
@@ -43,7 +44,13 @@ function createAboutWindow() {
         height: 300,
         icon: 'assets/icons/icon_256x256.png',
         resizable: false,
+        frame: false,
+        autoHideMenuBar: true,
         backgroundColor: 'white',
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+        },
     })
 
     aboutWindow.loadFile('./app/about.html')
@@ -100,11 +107,11 @@ const menu = [
 ]
 
 ipcMain.on('image:minimize', (e, options) => {
-    options.dest = path.join(os.homedir(), 'imageresize')
-    shrinkImage(options)
+    options.dest = path.join(os.homedir(), 'ImageResize')
+    resizeImage(options)
   })
   
-  async function shrinkImage({ imgPath, quality, dest }) {
+  async function resizeImage({ imgPath, quality, dest }) {
     try {
       const pngQuality = quality / 100
         for (let i = 0; i < imgPath.length; i++) {
@@ -125,6 +132,27 @@ ipcMain.on('image:minimize', (e, options) => {
     }
   }
 
+  ipcMain.on('open-about', (event, arg) => {
+    createAboutWindow();
+  })
+
+  ipcMain.on('close-btn', (ev,option) => {
+      if(option !== 'info'){
+        mainWindow.close();
+      } else {
+          aboutWindow.close();
+      }
+    
+  })
+
+  ipcMain.on('minimize-btn', (ev) => {
+      mainWindow.minimize();
+  });
+
+  ipcMain.on('new-window', function(e, url) {
+    e.preventDefault();
+    shell.openExternal(url);
+  });
 
 //mac os fixes
 
@@ -133,6 +161,8 @@ app.on('window-all-closed', () => {
         app.quit();
     }
 });
+
+
 
 app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
