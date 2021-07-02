@@ -4,8 +4,12 @@ const { app, BrowserWindow, Menu, ipcMain, shell } = require('electron');
 const imagemin = require('imagemin');
 const imageminMozjpeg = require('imagemin-mozjpeg');
 const imageminPngquant = require('imagemin-pngquant');
-const iconv = require('iconv-lite');
+const setupEvents = require('./installers/setupEvents')
 
+ if (setupEvents.handleSquirrelEvent()) {
+    // squirrel event handled and app will exit in 1000ms, so don't do anything else
+    return;
+ }
 
 process.env.NODE_ENV = 'production';
 
@@ -19,7 +23,7 @@ let aboutWindow;
 function createMainWindow() {
     mainWindow = new BrowserWindow({
         title: 'Image Resizer',
-        width: isDev ? 800 : 600,
+        width: isDev ? 800 : 400,
         height: 550,
         icon: 'assets/icons/icon_256x256.png',
         resizable: isDev ? true : false,
@@ -55,7 +59,6 @@ function createAboutWindow() {
 
     aboutWindow.loadFile('./app/about.html')
 }
-
 
 
 app.on('ready', () => {
@@ -161,8 +164,6 @@ app.on('window-all-closed', () => {
         app.quit();
     }
 });
-
-
 
 app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
